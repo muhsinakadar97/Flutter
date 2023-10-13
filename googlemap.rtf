@@ -1,0 +1,283 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang16393{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 GOOGLE MAP INTEGRATION IN FLUTTER\par
+
+\pard\sa200\sl276\slmult1\fs24\par
+In pubspec.yaml\par
+\b0 dependencies:\par
+  flutter:\par
+    sdk: flutter\par
+  google_maps_flutter: ^2.5.0\par
+\b In app -> build.gradle\par
+\b0 minSdkVersion 20\par
+\b In AndroidManifest.xml\par
+\b0 <meta-data android:name="com.google.android.geo.API_KEY"\par
+                   android:value="AIzaSyDZLDFCVEuSq3hkJzOjxNijstozO2VujOg"/>\par
+\b In your dart file\par
+\b0 import 'package:flutter/material.dart';\par
+import 'package:google_maps_flutter/google_maps_flutter.dart';\par
+\par
+class MapScreen extends StatelessWidget \{\par
+  const MapScreen(\{Key? key\});\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return MaterialApp(\par
+      title: 'Notes App',\par
+      home: Mapdemo(),\par
+    );\par
+  \}\par
+\}\par
+\par
+class Mapdemo extends StatefulWidget \{\par
+  @override\par
+  _MapScreenState createState() => _MapScreenState();\par
+\}\par
+\par
+class _MapScreenState extends State<Mapdemo> \{\par
+  late GoogleMapController _googleMapController; // Use 'late' to declare the controller\par
+\par
+  // Define an initial camera position\par
+  CameraPosition _initialCameraPosition = CameraPosition(\par
+    target: LatLng(37.773972, -122.431297),\par
+    zoom: 11.5,\par
+  );\par
+\par
+  @override\par
+  void initState() \{\par
+    super.initState();\par
+  \}\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return Scaffold(\par
+      appBar: AppBar(\par
+        title: Text('Map'),\par
+      ),\par
+      body: GoogleMap(\par
+        onMapCreated: (controller) \{\par
+          _googleMapController = controller;\par
+        \},\par
+        initialCameraPosition: _initialCameraPosition,\par
+        mapType: MapType.satellite,\par
+      ),\par
+    );\par
+  \}\par
+\par
+  @override\par
+  void dispose() \{\par
+    // Dispose the controller when not needed\par
+    _googleMapController.dispose();\par
+    super.dispose();\par
+  \}\par
+\}\par
+\b API Key :  \b0 AIzaSyDZLDFCVEuSq3hkJzOjxNijstozO2VujOg\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 MAP WITH MARKERS\par
+
+\pard\sa200\sl276\slmult1\b0\fs24 import 'package:flutter/material.dart';\par
+import 'package:google_maps_flutter/google_maps_flutter.dart';\par
+\par
+class MapScreen extends StatelessWidget \{\par
+  const MapScreen(\{Key? key\});\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return MaterialApp(\par
+      title: 'Notes App',\par
+      home: Mapdemo(),\par
+    );\par
+  \}\par
+\}\par
+\par
+class Mapdemo extends StatefulWidget \{\par
+  @override\par
+  _MapScreenState createState() => _MapScreenState();\par
+\}\par
+\par
+class _MapScreenState extends State<Mapdemo> \{\par
+  late GoogleMapController _googleMapController; // Use 'late' to declare the controller\par
+\par
+  // Define an initial camera position\par
+  CameraPosition _initialCameraPosition = CameraPosition(\par
+    target: LatLng(37.773972, -122.431297),\par
+    zoom: 11.5,\par
+  );\par
+\par
+  Set<Marker> _markers = \{\}; // Create an empty set for markers\par
+\par
+\par
+  @override\par
+  void initState() \{\par
+    super.initState();\par
+  \}\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return Scaffold(\par
+      appBar: AppBar(\par
+        title: Text('Map'),\par
+      ),\par
+      body: GoogleMap(\par
+        onMapCreated: (controller) \{\par
+          _googleMapController = controller;\par
+        \},\par
+        initialCameraPosition: _initialCameraPosition,\par
+        mapType: MapType.satellite,\par
+        markers: _markers, // Add markers to the GoogleMap widget\par
+        onLongPress: _addMarker, // Handle long press events\par
+      ),\par
+      floatingActionButton: FloatingActionButton(\par
+      onPressed: () \{\par
+        // Example: Animate to a specific location (e.g., New York City)\par
+        _goToLocation(40.7128, -74.0060);\par
+      \},\par
+      child: Icon(Icons.location_searching),\par
+    ),\par
+    );\par
+  \}\par
+\par
+  @override\par
+  void dispose() \{\par
+    // Dispose the controller when not needed\par
+    _googleMapController.dispose();\par
+    super.dispose();\par
+  \}\par
+\par
+ void _addMarker(LatLng latLng) \{\par
+    // Create a new marker and add it to the set of markers\par
+    setState(() \{\par
+      _markers.add(\par
+        Marker(\par
+          markerId: MarkerId('$\{latLng.latitude\}_$\{latLng.longitude\}'),\par
+          position: latLng,\par
+          infoWindow: InfoWindow(title: 'New Marker', snippet: 'Added by long-press'),\par
+        ),\par
+      );\par
+    \});\par
+  \}\par
+\par
+  void _goToLocation(double latitude, double longitude) \{\par
+  final CameraPosition target = CameraPosition(\par
+    target: LatLng(latitude, longitude),\par
+    zoom: 15.0, // You can adjust the zoom level as needed\par
+  );\par
+\par
+  _googleMapController.animateCamera(CameraUpdate.newCameraPosition(target));\par
+\}\par
+\}\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 MAP WITH LOCATION SEARCH WHEN LATITUDE AND LONGITUDE IS GIVEN\par
+
+\pard\sa200\sl276\slmult1\b0\fs24 import 'package:flutter/material.dart';\par
+import 'package:google_maps_flutter/google_maps_flutter.dart';\par
+\par
+class MapScreen extends StatelessWidget \{\par
+  const MapScreen(\{Key? key\});\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return MaterialApp(\par
+      title: 'Notes App',\par
+      home: Mapdemo(),\par
+    );\par
+  \}\par
+\}\par
+\par
+class Mapdemo extends StatefulWidget \{\par
+  @override\par
+  _MapScreenState createState() => _MapScreenState();\par
+\}\par
+\par
+class _MapScreenState extends State<Mapdemo> \{\par
+  late GoogleMapController _googleMapController; // Use 'late' to declare the controller\par
+\par
+  // Define an initial camera position\par
+  CameraPosition _initialCameraPosition = CameraPosition(\par
+    target: LatLng(37.773972, -122.431297),\par
+    zoom: 11.5,\par
+  );\par
+\par
+  Set<Marker> _markers = \{\}; // Create an empty set for markers\par
+\par
+\par
+  @override\par
+  void initState() \{\par
+    super.initState();\par
+  \}\par
+\par
+  @override\par
+  Widget build(BuildContext context) \{\par
+    return Scaffold(\par
+      appBar: AppBar(\par
+        title: Text('Map'),\par
+        actions: [\par
+          // Add a button to the AppBar\par
+          IconButton(\par
+            icon: Icon(Icons.search),\par
+            onPressed: () \{\par
+              // Example: Animate to a specific location (e.g., New York City)\par
+              _goToLocation(40.7128, -74.0060);\par
+            \},\par
+          ),\par
+        ],\par
+        \par
+      ),\par
+      body: GoogleMap(\par
+        onMapCreated: (controller) \{\par
+          _googleMapController = controller;\par
+        \},\par
+        initialCameraPosition: _initialCameraPosition,\par
+        mapType: MapType.satellite,\par
+        markers: _markers, // Add markers to the GoogleMap widget\par
+        onLongPress: _addMarker, // Handle long press events\par
+      ),\par
+      floatingActionButton: FloatingActionButton(\par
+      onPressed: () \{\par
+        // Example: Animate to a specific location (e.g., New York City)\par
+        _goToLocation(40.7128, -74.0060);\par
+      \},\par
+      child: Icon(Icons.location_searching),\par
+    ),\par
+    );\par
+  \}\par
+\par
+  @override\par
+  void dispose() \{\par
+    // Dispose the controller when not needed\par
+    _googleMapController.dispose();\par
+    super.dispose();\par
+  \}\par
+\par
+ void _addMarker(LatLng latLng) \{\par
+    // Create a new marker and add it to the set of markers\par
+    setState(() \{\par
+      _markers.add(\par
+        Marker(\par
+          markerId: MarkerId('$\{latLng.latitude\}_$\{latLng.longitude\}'),\par
+          position: latLng,\par
+          infoWindow: InfoWindow(title: 'New Marker', snippet: 'Added by long-press'),\par
+        ),\par
+      );\par
+    \});\par
+  \}\par
+\par
+  void _goToLocation(double latitude, double longitude) \{\par
+  final CameraPosition target = CameraPosition(\par
+    target: LatLng(latitude, longitude),\par
+    zoom: 15.0, // You can adjust the zoom level as needed\par
+  );\par
+\par
+  _googleMapController.animateCamera(CameraUpdate.newCameraPosition(target));\par
+\}\par
+\}\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28\par
+
+\pard\sa200\sl276\slmult1\b0\fs24\par
+\b\par
+}
+ 
